@@ -7,6 +7,7 @@
 #define SOLVERS__CERES_SOLVER_HPP_
 
 #include <math.h>
+#include <ceres/local_parameterization.h>
 #include <ceres/ceres.h>
 #include <vector>
 #include <unordered_map>
@@ -67,7 +68,7 @@ private:
   ceres::Problem::Options options_problem_;
   ceres::LossFunction * loss_function_;
   ceres::Problem * problem_;
-  ceres::Manifold * angle_manifold_;
+  ceres::LocalParameterization * angle_local_parameterization_;
   bool was_constant_set_, debug_logging_;
 
   // graph

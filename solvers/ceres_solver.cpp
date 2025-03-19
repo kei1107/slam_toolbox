@@ -77,7 +77,7 @@ void CeresSolver::Configure(rclcpp_lifecycle::LifecycleNode::SharedPtr node)
   first_node_ = nodes_->end();
 
   // formulate problem
-  angle_manifold_ = AngleManifold::Create();
+  angle_local_parameterization_ = AngleLocalParameterization::Create();
 
   // choose loss function default squared loss (NULL)
   loss_function_ = NULL;
@@ -310,7 +310,7 @@ void CeresSolver::Reset()
   problem_ = new ceres::Problem(options_problem_);
   first_node_ = nodes_->end();
 
-  angle_manifold_ = AngleManifold::Create();
+  angle_local_parameterization_ = AngleLocalParameterization::Create();
 }
 
 /*****************************************************************************/
@@ -382,10 +382,10 @@ void CeresSolver::AddConstraint(karto::Edge<karto::LocalizedRangeScan> * pEdge)
     cost_function, loss_function_,
     &node1it->second(0), &node1it->second(1), &node1it->second(2),
     &node2it->second(0), &node2it->second(1), &node2it->second(2));
-  problem_->SetManifold(&node1it->second(2),
-    angle_manifold_);
-  problem_->SetManifold(&node2it->second(2),
-    angle_manifold_);
+  problem_->SetParameterization(&node1it->second(2),
+    angle_local_parameterization_);
+  problem_->SetParameterization(&node2it->second(2),
+    angle_local_parameterization_);
 
   blocks_->insert(std::pair<std::size_t, ceres::ResidualBlockId>(
       GetHash(node1, node2), block));
